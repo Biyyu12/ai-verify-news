@@ -45,6 +45,8 @@ if not google_api_key:
 load_dotenv()
 exa_api_key = os.getenv("EXA_API_KEY")
 exa_tool = ExaSearchResults(exa_api_key=exa_api_key)
+# Replace with your actual EXA API key
+# exa_tool = ExaSearchResults(exa_api_key="Your-EXA-API-Key-Here")  
 
 # We use `st.session_state` which is Streamlit's way of "remembering" variables
 # between user interactions (like sending a message or clicking a button).

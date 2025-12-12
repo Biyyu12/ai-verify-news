@@ -19,10 +19,12 @@ st.caption("Asisten verifikasi berita cerdas menggunakan Google Gemini & Exa")
 # Load environment variables from .env file
 # google api key 
 load_dotenv()
+# google_api_key = "Your-Google-API-Key-Here"
 google_api_key = os.getenv("GOOGLE_API_KEY")
 
 #add exa tools for web search
 load_dotenv()
+# exa_tool = ExaSearchResults(exa_api_key="Your-EXA-API-Key-Here")  
 exa_api_key = os.getenv("EXA_API_KEY")
 exa_tool = ExaSearchResults(exa_api_key=exa_api_key)
 
@@ -32,7 +34,7 @@ exa_tool = ExaSearchResults(exa_api_key=exa_api_key)
 
 
 # Replace with your actual EXA API key
-# exa_tool = ExaSearchResults(exa_api_key="Your-EXA-API-Key-Here")  
+
 
 # We use `st.session_state` which is Streamlit's way of "remembering" variables
 # between user interactions (like sending a message or clicking a button).

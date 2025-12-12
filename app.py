@@ -14,47 +14,33 @@ from dotenv import load_dotenv # For loading environment variables
 st.title("🔍 Cek Fakta & Berita")
 st.caption("Asisten verifikasi berita cerdas menggunakan Google Gemini & Exa")
 
-# --- 2. Sidebar for Settings ---
+# --- 2. API Key and Agent Initialization ---
 
-# Create a sidebar section for app settings using 'with st.sidebar:'
-with st.sidebar:
-    # Add a subheader to organize the settings
-    st.subheader("Settings")
-    
-    # Create a text input field for the Google AI API Key.
-    # 'type="password"' hides the key as the user types it.
-    google_api_key = st.text_input("Google AI API Key", type="password")
-    
-    # Create a button to reset the conversation.
-    # 'help' provides a tooltip that appears when hovering over the button.
-    reset_button = st.button("Reset Conversation", help="Clear all messages and start fresh")
-
-# --- 3. API Key and Agent Initialization ---
-
-# Check if the user has provided an API key.
-# If not, display an informational message and stop the app from running further.
-if not google_api_key:
-    st.info("Please add your Google AI API key in the sidebar to start chatting.", icon="🗝️")
-    st.stop()
-
-# This block of code handles the creation of the LangGraph agent.
-# It's designed to be efficient: it only creates a new agent if one doesn't exist
-# or if the user has changed the API key in the sidebar.
+# Load environment variables from .env file
+# google api key 
+load_dotenv()
+google_api_key = os.getenv("GOOGLE_API_KEY")
 
 #add exa tools for web search
 load_dotenv()
 exa_api_key = os.getenv("EXA_API_KEY")
 exa_tool = ExaSearchResults(exa_api_key=exa_api_key)
+
+# This block of code handles the creation of the LangGraph agent.
+# It's designed to be efficient: it only creates a new agent if one doesn't exist
+# or if the user has changed the API key in the sidebar.
+
+
 # Replace with your actual EXA API key
 # exa_tool = ExaSearchResults(exa_api_key="Your-EXA-API-Key-Here")  
 
 # We use `st.session_state` which is Streamlit's way of "remembering" variables
 # between user interactions (like sending a message or clicking a button).
-if ("agent" not in st.session_state) or (getattr(st.session_state, "_last_key", None) != google_api_key):
+if "agent" not in st.session_state:
     try:
         # Initialize the LLM with the API key
         llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-flash-lite",
             google_api_key=google_api_key,
             temperature=0.7
         )
@@ -94,14 +80,6 @@ if ("agent" not in st.session_state) or (getattr(st.session_state, "_last_key", 
 # Initialize the message history (as a list) if it doesn't exist.
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-# Handle the reset button click.
-if reset_button:
-    # If the reset button is clicked, clear the agent and message history from memory.
-    st.session_state.pop("agent", None)
-    st.session_state.pop("messages", None)
-    # st.rerun() tells Streamlit to refresh the page from the top.
-    st.rerun()
 
 # --- 5. Display Past Messages ---
 
